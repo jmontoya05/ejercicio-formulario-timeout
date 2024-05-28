@@ -1,31 +1,31 @@
 // Esta es la base de datos de nuestros usuarios
 const baseDeDatos = {
-  usuarios: [
-    {
-      id: 1,
-      name: "Steve Jobs",
-      email: "steve@jobs.com",
-      password: "Steve123",
-    },
-    {
-      id: 2,
-      name: "Ervin Howell",
-      email: "shanna@melissa.tv",
-      password: "Ervin345",
-    },
-    {
-      id: 3,
-      name: "Clementine Bauch",
-      email: "nathan@yesenia.net",
-      password: "Floppy39876",
-    },
-    {
-      id: 4,
-      name: "Patricia Lebsack",
-      email: "julianne.oconner@kory.org",
-      password: "MysuperPassword345",
-    },
-  ],
+    usuarios: [
+        {
+            id: 1,
+            name: "Steve Jobs",
+            email: "steve@jobs.com",
+            password: "Steve123",
+        },
+        {
+            id: 2,
+            name: "Ervin Howell",
+            email: "shanna@melissa.tv",
+            password: "Ervin345",
+        },
+        {
+            id: 3,
+            name: "Clementine Bauch",
+            email: "nathan@yesenia.net",
+            password: "Floppy39876",
+        },
+        {
+            id: 4,
+            name: "Patricia Lebsack",
+            email: "julianne.oconner@kory.org",
+            password: "MysuperPassword345",
+        },
+    ],
 };
 
 // ACTIVIDAD
@@ -68,3 +68,57 @@ TIPS:
 
    ¡Manos a la obra!
  */
+
+window.addEventListener("load", () => {
+    const button = document.querySelector("button.login-btn");
+    const loader = document.querySelector("#loader");
+    const errorContainer = document.querySelector("#error-container");
+
+    button.addEventListener("click", () => {
+        const email = document.querySelector("#email-input").value;
+        const password = document.querySelector("#password-input").value;
+        errorContainer.classList.add("hidden");
+        loader.classList.remove("hidden");
+
+        const validate =
+            validateEmail(email) &&
+            validatePassword(password) &&
+            validatePerson(email, password, baseDeDatos.usuarios);
+
+        setTimeout(() => {
+            if (validate) {
+                const form = document.querySelector("form");
+                form.classList.add("hidden");
+                const h1 = document.querySelector("h1");
+                h1.innerText = "Bienvenido al sitio 😀";
+            } else {
+                loader.classList.add("hidden");
+                errorContainer.innerHTML = `<small>Uno o todos los datos ingresados son incorrectos</small>`;
+                errorContainer.classList.remove("hidden");
+            }
+        }, 3000);
+    });
+});
+
+function validateEmail(email) {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+}
+
+function validatePassword(password) {
+    // Mínimo 8 caracteres
+    // Al menos una letra mayúscula
+    // Al menos una letra minúscula
+    // Al menos un número
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return regex.test(password);
+}
+
+function validatePerson(email, password, users) {
+    for (const user of users) {
+        if (user.email === email && user.password === password) {
+            return true;
+        }
+    }
+    return false;
+}
